@@ -7,7 +7,81 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+:root {
+  --alarm-size: 7px;
+}
+
+
+.twin_components {
+  display: flex;
+  width: 500px;
+  justify-content: space-between;
+}
+
+.metric_alarm_indicator {
+  width: 100px;
+  height: 100px;
+  background-color: lightgreen;
+  text-align: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  flex: 1;
+  border: 1px black solid;
+  border-radius: 2px;
+  position: relative;
+  padding-top: var(--alarm-size);
+}
+
+.metric_alarm_indicator.run_indicator_alarm {
+  background-color: lightpink;
+  flex: 2;
+}
+
+.alarm_message {
+  font-size: 1rem;
+  animation: bgColor 2s infinite linear;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  position: absolute;
+  top: 0px;
+}
+
+@keyframes bgColor {
+  12.5% {
+    background-color: #dda9a9;
+  }
+
+  25% {
+    background-color: #ea5454;
+  }
+
+  37.5% {
+    background-color: #ee3535;
+  }
+
+  50% {
+    background-color: #FF0000;
+  }
+
+  62.5% {
+    background-color: #FF0000;
+  }
+
+  75% {
+    background-color: #ee3535;
+  }
+
+  87.5% {
+    background-color: #ea5454;
+  }
+
+  100% {
+    background-color: #dda9a9;
+  }
+}
+
+.metric {
+  font-size: 4rem;
+  font-weight: bold;
 }
