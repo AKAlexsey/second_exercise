@@ -8,19 +8,21 @@ body {
 }
 
 :root {
-  --alarm-size: 7px;
+  --alarm-height: 19px;
+  --indicator-width: 200px;
+  --indicator-height: 100px;
 }
 
-
 .twin_components {
-  display: flex;
-  width: 500px;
+  width: calc(var(--indicator-width) * 2);
+  display: grid;
   justify-content: space-between;
+  grid-template-columns: var(--indicator-width) var(--indicator-width);
 }
 
 .metric_alarm_indicator {
-  width: 100px;
-  height: 100px;
+  width: var(--indicator-width);
+  height: var(--indicator-height);
   background-color: lightgreen;
   text-align: center;
   margin-left: 5px;
@@ -29,56 +31,25 @@ body {
   border: 1px black solid;
   border-radius: 2px;
   position: relative;
-  padding-top: var(--alarm-size);
+  padding-bottom: var(--alarm-size);
+  display: flex;
 }
 
 .metric_alarm_indicator.run_indicator_alarm {
   background-color: lightpink;
-  flex: 2;
+}
+
+.metric_alarm_indicator .metric {
+  width: 100%;
 }
 
 .alarm_message {
   font-size: 1rem;
-  animation: bgColor 2s infinite linear;
   position: absolute;
-  top: 0px;
   width: 100%;
-  position: absolute;
-  top: 0px;
-}
-
-@keyframes bgColor {
-  12.5% {
-    background-color: #dda9a9;
-  }
-
-  25% {
-    background-color: #ea5454;
-  }
-
-  37.5% {
-    background-color: #ee3535;
-  }
-
-  50% {
-    background-color: #FF0000;
-  }
-
-  62.5% {
-    background-color: #FF0000;
-  }
-
-  75% {
-    background-color: #ee3535;
-  }
-
-  87.5% {
-    background-color: #ea5454;
-  }
-
-  100% {
-    background-color: #dda9a9;
-  }
+  bottom: 0px;
+  background-color: #ee3535;
+  height: var(--alarm-height);
 }
 
 .metric {
