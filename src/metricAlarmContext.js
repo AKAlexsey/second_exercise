@@ -8,13 +8,38 @@ export { MORE_SIGN, LESS_SIGN, EQUAL_SIGN, NOT_EQUAL_SIGN }
 
 const makeMetricAlarmIndicatorState = (defaultParams = {}) => {
     const { id, value = DEFAULT_VALUE, sign = MORE_SIGN, limitValue = DEFAULT_VALUE } = defaultParams;
-    const alarmMessage = defaultParams.alarmMessage?defaultParams.alarmMessage:makeAlarmMessage(sign, limitValue);
+    const alarmMessage = defaultParams.alarmMessage ? defaultParams.alarmMessage : makeAlarmMessage(sign, limitValue);
 
     return { id, value, sign, limitValue, alarmMessage };
 }
 
+const updateMetricAlarmIndicatorState = (indicatorState, updateParams) => {
+    const { id, value, sign, limitValue, alarmMessage } = updateParams;
+
+    return { 
+        ...indicatorState,
+        ...id && { id },
+        ...value && { value },
+        ...sign && { sign },
+        ...limitValue && { limitValue },
+        ...alarmMessage && { alarmMessage }
+    };
+}
+
+const incValue = (indicatorState) => {
+    const { value } = indicatorState;
+
+    return { ...indicatorState, value };
+}
+
+const decValue = (indicatorState) => {
+    const { value } = indicatorState;
+
+    return { ...indicatorState, value };
+}
+
 const makeAlarmMessage = (sign, limitValue) => {
-    switch(sign) {
+    switch (sign) {
         case MORE_SIGN:
             return `Value is more than ${limitValue}`;
             break;
@@ -33,7 +58,7 @@ const makeAlarmMessage = (sign, limitValue) => {
 }
 
 const getPredicateFunction = (sign, limitValue) => {
-    switch(sign) {
+    switch (sign) {
         case MORE_SIGN:
             return (value) => value > limitValue;
             break;
@@ -51,4 +76,11 @@ const getPredicateFunction = (sign, limitValue) => {
     }
 }
 
-export { makeMetricAlarmIndicatorState, getPredicateFunction }
+export { 
+    makeMetricAlarmIndicatorState,
+    getPredicateFunction,
+    updateMetricAlarmIndicatorState,
+    makeAlarmMessage,
+    incValue,
+    decValue
+}

@@ -14,6 +14,7 @@ body {
   --main-container-padding: 7px;
   --grid-elements-gap: 10px;
   --indicator-border-radius: 4px;
+  --change_value_button_size: 32px;
 }
 
 .twin_components {
@@ -41,24 +42,47 @@ hr.form_separator {
 }
 
 .metric_alarm_indicator {
+  display: flex;
   width: var(--indicator-width);
   height: var(--indicator-height);
   background-color: lightgreen;
   text-align: center;
-  flex: 1;
   border: 1px black solid;
   border-radius: var(--indicator-border-radius);
   position: relative;
-  padding-bottom: var(--alarm-size);
-  display: flex;
 }
 
 .metric_alarm_indicator.run_indicator_alarm {
   background-color: lightpink;
 }
 
+.metric_alarm_indicator.edit_indicator {
+  background-color: white;
+}
+
+.metric_alarm_indicator.edit_indicator .metric {
+  color: grey;
+}
+
 .metric_alarm_indicator .metric {
-  width: 100%;
+  flex: 1;
+}
+
+.metric_alarm_indicator .value_change_button_container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.metric_alarm_indicator .value_change_button_container .value_change_button {
+  margin-left: auto;
+  margin-right: auto;
+  height: var(--change_value_button_size);
+  width: var(--change_value_button_size);
+  border: 1.5px solid black;
+  border-radius: calc(var(--change_value_button_size) / 2);
+  background-color: white;
+  font-size: 1.25rem;
 }
 
 .alarm_message {
@@ -72,5 +96,9 @@ hr.form_separator {
 
 .metric {
   font-size: 4rem;
+  line-height: 4rem;
   font-weight: bold;
+  padding-bottom: var(--alarm-height);
+  padding-top: var(--alarm-height);
+  color: black;
 }

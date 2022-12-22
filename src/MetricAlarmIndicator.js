@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { getPredicateFunction, makeMetricAlarmIndicatorState } from './metricAlarmContext';
+import { getPredicateFunction, makeMetricAlarmIndicatorState, incValue, decValue } from './metricAlarmContext';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
 
 const alarmFunction = (state) => {
   const { value, sign, limitValue } = state;
@@ -20,11 +23,10 @@ function MetricAlarmIndicator( props ) {
       },
       [componentState.value, componentState.sign, componentState.limitValue ]
     )
-
     
     if (editMode) {
       return (
-        <div className='metric_alarm_indicator'>
+        <div className='metric_alarm_indicator edit_indicator'>
           <div className="metric">
             { componentState.value }
           </div>
@@ -33,8 +35,18 @@ function MetricAlarmIndicator( props ) {
     } else {
     return (
       <div className={alarm?'metric_alarm_indicator run_indicator_alarm':'metric_alarm_indicator indicator_ok'}>
+        <div className="value_change_button_container">
+          <button className='value_change_button'>
+            <FontAwesomeIcon icon={faMinus} />
+          </button>
+        </div>
         <div className="metric">
           { componentState.value }
+        </div>
+        <div className="value_change_button_container">
+          <button className='value_change_button'>
+            <FontAwesomeIcon icon={faPlus} />
+          </button>
         </div>
         {
           alarm &&

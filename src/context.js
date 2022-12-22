@@ -16,6 +16,7 @@ const AppProvider = ({ children }) => {
 
     return (
         <AppContext.Provider value={{
+            globalState,
             addIndicatorWithParams
         }}>
             { children }
