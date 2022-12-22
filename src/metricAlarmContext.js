@@ -29,13 +29,13 @@ const updateMetricAlarmIndicatorState = (indicatorState, updateParams) => {
 const incValue = (indicatorState) => {
     const { value } = indicatorState;
 
-    return { ...indicatorState, value };
+    return { ...indicatorState, value: value + 1 };
 }
 
 const decValue = (indicatorState) => {
     const { value } = indicatorState;
 
-    return { ...indicatorState, value };
+    return { ...indicatorState, value: value - 1 };
 }
 
 const makeAlarmMessage = (sign, limitValue) => {

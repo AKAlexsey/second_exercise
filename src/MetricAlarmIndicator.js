@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { getPredicateFunction, makeMetricAlarmIndicatorState, incValue, decValue } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 const alarmFunction = (state) => {
   const { value, sign, limitValue } = state;
@@ -11,24 +11,42 @@ const alarmFunction = (state) => {
 };
 
 function MetricAlarmIndicator( props ) {
-    const { value, sign, limitValue, alarmMessage, edit = false } = props;
+    const { id, value, sign, limitValue, alarmMessage, edit = false, updateIndicatorState } = props;
 
-    const [componentState, updateComponentState] = useState(makeMetricAlarmIndicatorState({ value, sign, limitValue, alarmMessage }));
-    const [alarm, setAlarm] = useState(alarmFunction(componentState));
+    const [indicatorState, setIndicatorState] = useState(makeMetricAlarmIndicatorState({ id, value, sign, limitValue, alarmMessage }));
+    const [alarm, setAlarm] = useState(alarmFunction(indicatorState));
     const [editMode, setEditMode] = useState(edit);
+
+    const decreaseButtonCallback = useCallback(() => {
+      console.log(`'dec'  ${indicatorState.value}`)
+      setIndicatorState(decValue(indicatorState));
+    }, [indicatorState]);
+
+    const increaseButtonCallback = useCallback(() => {
+      console.log(`'inc' ${indicatorState.value}`)
+      setIndicatorState(incValue(indicatorState));
+    }, [indicatorState])
 
     useEffect(
       () => {
-        setAlarm(alarmFunction(componentState));
+        setAlarm(alarmFunction(indicatorState));
       },
-      [componentState.value, componentState.sign, componentState.limitValue ]
+      [indicatorState.value, indicatorState.sign, indicatorState.limitValue]
     )
+
+    // useEffect(
+    //   () => {
+    //     debugger;
+    //     updateIndicatorState(indicatorState.id, indicatorState);
+    //   },
+    //   [indicatorState]
+    // )
     
     if (editMode) {
       return (
         <div className='metric_alarm_indicator edit_indicator'>
           <div className="metric">
-            { componentState.value }
+            { indicatorState.value }
           </div>
         </div>
       );
@@ -36,22 +54,22 @@ function MetricAlarmIndicator( props ) {
     return (
       <div className={alarm?'metric_alarm_indicator run_indicator_alarm':'metric_alarm_indicator indicator_ok'}>
         <div className="value_change_button_container">
-          <button className='value_change_button'>
+          <button type='button' className='value_change_button' onClick={decreaseButtonCallback}>
             <FontAwesomeIcon icon={faMinus} />
           </button>
         </div>
         <div className="metric">
-          { componentState.value }
+          { indicatorState.value }
         </div>
         <div className="value_change_button_container">
-          <button className='value_change_button'>
+          <button type='button' className='value_change_button' onClick={increaseButtonCallback} >
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
         {
           alarm &&
             <div className="alarm_message">
-              { componentState.alarmMessage }
+              { indicatorState.alarmMessage }
             </div>
         }
       </div>

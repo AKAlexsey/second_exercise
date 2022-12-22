@@ -14,10 +14,24 @@ const AppProvider = ({ children }) => {
         setGlobalState(addIndicator(globalState, newIndicator));
     }
 
+    const updateIndicatorState = (id, indicatorParams) => {
+        const { indicatorsList }  = globalState;
+        const updatedIndicatorsList = indicatorsList.map((indicator) => {
+            if (indicator.id === id) {
+                return { ...indicator, ...indicatorParams };
+            } else {
+                return indicator;
+            }
+        });
+        debugger;
+        setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
+    }
+
     return (
         <AppContext.Provider value={{
             globalState,
-            addIndicatorWithParams
+            addIndicatorWithParams,
+            updateIndicatorState
         }}>
             { children }
         </AppContext.Provider>
