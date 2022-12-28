@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react';
-import { makeMetricAlarmIndicatorState } from './metricAlarmContext';
+import { makeMetricAlarmIndicatorState, incValue, decValue } from './metricAlarmContext';
 import { addIndicator, makeTwinComponentsState, newIndicatorId } from './twinComponentsContext';
 
 const AppContext = React.createContext();
@@ -38,26 +38,35 @@ const AppProvider = ({ children }) => {
         setGlobalState(addIndicator(globalState, newIndicator));
     }
 
-    const updateIndicatorState = useCallback((id, indicatorParams) => {
+    const updateIndicatorWithFunction = useCallback((id, updateFunction) => {
         const { indicatorsList } = globalState;
-        debugger;
 
         const updatedIndicatorsList = indicatorsList.map((indicator) => {
             if (indicator.id === id) {
-                return { ...indicator, ...indicatorParams };
+                return updateFunction(indicator);
             } else {
                 return indicator;
             }
         });
 
         setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
-    }, [indicatorsList]);
+    }, [indicatorsList])
+
+    const decIndicatorValue = (id) => {
+        updateIndicatorWithFunction(id, decValue);
+    }
+
+    const incIndicatorValue = (id) => {
+        updateIndicatorWithFunction(id, incValue);
+    }
 
     return (
         <AppContext.Provider value={{
             globalState,
             addIndicatorWithParams,
-            updateIndicatorState
+            updateIndicatorWithFunction,
+            incIndicatorValue,
+            decIndicatorValue
         }}>
             {children}
         </AppContext.Provider>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { getPredicateFunction, incValue, decValue } from './metricAlarmContext';
+import { getPredicateFunction } from './metricAlarmContext';
 import { useGlobalContext } from './context';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,20 +12,20 @@ const alarmFunction = (state) => {
 };
 
 function MetricAlarmIndicator(props) {
-  const { updateIndicatorState } = useGlobalContext();
+  const { incIndicatorValue, decIndicatorValue } = useGlobalContext();
   const { indicatorState, edit = false } = props;
   const { id, value, sign, limitValue, alarmMessage } = indicatorState;
 
   const [alarm, setAlarm] = useState(alarmFunction(indicatorState));
   const [editMode, setEditMode] = useState(edit);
 
-  const decreaseButtonCallback = useCallback(() => {
-    updateIndicatorState(id, decValue(indicatorState));
-  }, [indicatorState]);
-
   const increaseButtonCallback = useCallback(() => {
-    updateIndicatorState(id, incValue(indicatorState));
-  }, [indicatorState])
+    incIndicatorValue(id);
+  }, [value])
+
+  const decreaseButtonCallback = useCallback(() => {
+    decIndicatorValue(id);
+  }, [value]);
 
   useEffect(
     () => {

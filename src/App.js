@@ -1,5 +1,5 @@
 import MetricAlarmIndicator from './MetricAlarmIndicator';
-import React, { useState } from 'react';
+import React from 'react';
 import { useGlobalContext } from './context';
 
 function App() {
