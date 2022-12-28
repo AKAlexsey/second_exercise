@@ -1,11 +1,34 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeMetricAlarmIndicatorState } from './metricAlarmContext';
 import { addIndicator, makeTwinComponentsState, newIndicatorId } from './twinComponentsContext';
 
 const AppContext = React.createContext();
 
+const LOCAL_STORAGE_NAME = 'indicatorsExercise';
+
+const makeDefaultState = () => {
+    const editIndicator = makeMetricAlarmIndicatorState({ id: 'editDummy' });
+
+    const twinComponents = makeTwinComponentsState();
+
+    return { ...twinComponents, editIndicator };
+}
+
+const geStateFromLocalStorage = () => {
+    const indicatorsListState = localStorage.getItem(LOCAL_STORAGE_NAME);
+    if (indicatorsListState) {
+        return JSON.parse(indicatorsListState);
+    } else {
+        return makeDefaultState();
+    }
+};
+
 const AppProvider = ({ children }) => {
-    const [globalState, setGlobalState] = useState(makeTwinComponentsState());
+    const [globalState, setGlobalState] = useState(geStateFromLocalStorage());
+
+    useEffect(() => {
+        localStorage.setItem(LOCAL_STORAGE_NAME, JSON.stringify(globalState))
+    }, [globalState]);
 
     const addIndicatorWithParams = (params) => {
         const id = newIndicatorId(globalState);
@@ -15,7 +38,7 @@ const AppProvider = ({ children }) => {
     }
 
     const updateIndicatorState = (id, indicatorParams) => {
-        const { indicatorsList }  = globalState;
+        const { indicatorsList } = globalState;
         const updatedIndicatorsList = indicatorsList.map((indicator) => {
             if (indicator.id === id) {
                 return { ...indicator, ...indicatorParams };
@@ -23,7 +46,6 @@ const AppProvider = ({ children }) => {
                 return indicator;
             }
         });
-        debugger;
         setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
     }
 
@@ -33,7 +55,7 @@ const AppProvider = ({ children }) => {
             addIndicatorWithParams,
             updateIndicatorState
         }}>
-            { children }
+            {children}
         </AppContext.Provider>
     );
 }
