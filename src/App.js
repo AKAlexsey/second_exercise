@@ -13,8 +13,8 @@ function App() {
       <hr className='form_separator' />
       <div className='indicators_container'>
         {
-          indicatorsList.map((indicatorState, _index) => {
-            return (<MetricAlarmIndicator key={indicatorState.id} indicatorState={indicatorState} />)
+          indicatorsList.map((indicatorState, index) => {
+            return (<MetricAlarmIndicator key={index} indicatorState={indicatorState} />)
           })
         }
       </div>

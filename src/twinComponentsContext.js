@@ -2,8 +2,8 @@ import { makeMetricAlarmIndicatorState } from "./metricAlarmContext";
 
 const makeTwinComponentsState = () => {
     const indicatorsList = [
-        makeMetricAlarmIndicatorState({ id: 1, value: 5, sign: '>', limitValue: 2 }),
-        makeMetricAlarmIndicatorState({ id: 2, value: 5, sign: '<', limitValue: 5 })
+        makeMetricAlarmIndicatorState({ id: 1, value: 0, sign: '>', limitValue: 2 }),
+        makeMetricAlarmIndicatorState({ id: 2, value: 0, sign: '<', limitValue: 5 })
     ];
     const currentMaxId = 2;
 

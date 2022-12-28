@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useCallback } from 'react';
 import { makeMetricAlarmIndicatorState } from './metricAlarmContext';
 import { addIndicator, makeTwinComponentsState, newIndicatorId } from './twinComponentsContext';
 
@@ -25,6 +25,7 @@ const geStateFromLocalStorage = () => {
 
 const AppProvider = ({ children }) => {
     const [globalState, setGlobalState] = useState(geStateFromLocalStorage());
+    const { indicatorsList } = globalState;
 
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_NAME, JSON.stringify(globalState))
@@ -37,8 +38,10 @@ const AppProvider = ({ children }) => {
         setGlobalState(addIndicator(globalState, newIndicator));
     }
 
-    const updateIndicatorState = (id, indicatorParams) => {
+    const updateIndicatorState = useCallback((id, indicatorParams) => {
         const { indicatorsList } = globalState;
+        debugger;
+
         const updatedIndicatorsList = indicatorsList.map((indicator) => {
             if (indicator.id === id) {
                 return { ...indicator, ...indicatorParams };
@@ -46,8 +49,9 @@ const AppProvider = ({ children }) => {
                 return indicator;
             }
         });
+
         setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
-    }
+    }, [indicatorsList]);
 
     return (
         <AppContext.Provider value={{
