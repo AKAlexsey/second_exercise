@@ -11,6 +11,9 @@
 # production
 /build
 
+# Visual Studio specific files
+/src/second_exercise.code-workspace
+
 # misc
 .DS_Store
 .env.local

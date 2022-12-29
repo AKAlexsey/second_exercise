@@ -38,7 +38,7 @@ const AppProvider = ({ children }) => {
         setGlobalState(addIndicator(globalState, newIndicator));
     }
 
-    const updateIndicatorWithFunction = useCallback((id, updateFunction) => {
+    const updateIndicatorWithFunction = (id, updateFunction) => {
         const { indicatorsList } = globalState;
 
         const updatedIndicatorsList = indicatorsList.map((indicator) => {
@@ -50,7 +50,7 @@ const AppProvider = ({ children }) => {
         });
 
         setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
-    }, [indicatorsList])
+    }
 
     const decIndicatorValue = (id) => {
         updateIndicatorWithFunction(id, decValue);
@@ -60,13 +60,19 @@ const AppProvider = ({ children }) => {
         updateIndicatorWithFunction(id, incValue);
     }
 
+    const deleteIndicator = (deleteId) => {
+        const updatedIndicatorsList = indicatorsList.filter(({ id }) => deleteId !== id);
+        setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
+    }
+
     return (
         <AppContext.Provider value={{
             globalState,
             addIndicatorWithParams,
             updateIndicatorWithFunction,
             incIndicatorValue,
-            decIndicatorValue
+            decIndicatorValue,
+            deleteIndicator
         }}>
             {children}
         </AppContext.Provider>

@@ -3,13 +3,17 @@ import React from 'react';
 import { useGlobalContext } from './context';
 
 function App() {
-  const { globalState: { indicatorsList, editIndicator } } = useGlobalContext();
-  const { incIndicatorValue, decIndicatorValue } = useGlobalContext();
+  const { 
+    globalState: { indicatorsList, editIndicator },
+    incIndicatorValue,
+    decIndicatorValue,
+    deleteIndicator
+  } = useGlobalContext();
 
   return (
     <div className='twin_components'>
       <div>
-        <MetricAlarmIndicator indicatorState={editIndicator} edit={true} />
+        <MetricAlarmIndicator indicatorState={editIndicator} edit={true} deleteIndicatorFunction={deleteIndicator} />
       </div>
       <hr className='form_separator' />
       <div className='indicators_container'>
@@ -21,6 +25,7 @@ function App() {
                 indicatorState={indicatorState}
                 increaseValueFunction={incIndicatorValue}
                 decreaseValueFunction={decIndicatorValue}
+                deleteIndicatorFunction={deleteIndicator}
               />
             )
           })

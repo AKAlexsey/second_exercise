@@ -16,6 +16,7 @@ body {
   --indicator-border-radius: 4px;
   --change-value-button-size: 32px;
   --indicator-background-color-transition: 1s;
+  --inactive-color: grey;
 }
 
 .twin_components {
@@ -64,7 +65,53 @@ hr.form_separator {
 }
 
 .metric_alarm_indicator.edit_indicator .metric {
-  color: grey;
+  color: var(--inactive-color);
+}
+
+.metric_alarm_indicator.edit_indicator .metric_sign_edit {
+  flex: 1;
+  font-size: 4rem;
+  line-height: 4rem;
+  font-weight: bold;
+  padding-bottom: var(--alarm-height);
+  padding-top: var(--alarm-height);
+  color: black;
+}
+
+.metric_alarm_indicator.edit_indicator .metric_limig_value {
+  flex: 1;
+  font-size: 4rem;
+  line-height: 4rem;
+  font-weight: bold;
+  padding-bottom: var(--alarm-height);
+  padding-top: var(--alarm-height);
+  color: black;
+}
+
+.indicator_actions_buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 16px;
+  padding-top: 2px;
+  padding-right: 2px;
+  background-color: rgba(256, 256, 256, 0);
+  height: 23px;
+  border: 0;
+  color: var(--inactive-color);
+}
+
+.indicator_actions_buttons .indicator_action {
+  flex: 1;
+  border: 0;
+  background-color: inherit;
+  font-size: inherit;
+  color: inherit;
+  padding: 1px 4px;
+}
+
+.indicator_actions_buttons .indicator_action:hover {
+  color: black;
 }
 
 .metric_alarm_indicator .metric {
