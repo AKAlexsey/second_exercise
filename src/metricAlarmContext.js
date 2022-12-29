@@ -3,8 +3,9 @@ const MORE_SIGN = '>';
 const LESS_SIGN = '<';
 const EQUAL_SIGN = '=';
 const NOT_EQUAL_SIGN = '!=';
+const ALL_SIGNS = { MORE_SIGN, LESS_SIGN, EQUAL_SIGN, NOT_EQUAL_SIGN }
 
-export { MORE_SIGN, LESS_SIGN, EQUAL_SIGN, NOT_EQUAL_SIGN }
+export { ALL_SIGNS }
 
 const makeMetricAlarmIndicatorState = (defaultParams = {}) => {
     const { id, value = DEFAULT_VALUE, sign = MORE_SIGN, limitValue = DEFAULT_VALUE } = defaultParams;

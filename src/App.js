@@ -3,7 +3,7 @@ import React from 'react';
 import { useGlobalContext } from './context';
 
 function App() {
-  const { 
+  const {
     globalState: { indicatorsList, editIndicator },
     incIndicatorValue,
     decIndicatorValue,

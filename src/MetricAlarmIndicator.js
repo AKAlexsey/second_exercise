@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { getPredicateFunction } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faGreaterThan, faLessThan, faEquals, faNotEqual, faClose, faEdit, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faClose, faEdit, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import { IndicatorSignSelector } from './IndicatorSignSelector'
 
 const alarmFunction = (state) => {
   const { value, sign, limitValue } = state;
@@ -11,7 +12,7 @@ const alarmFunction = (state) => {
 };
 
 function MetricAlarmIndicator(props) {
-  const { 
+  const {
     indicatorState,
     increaseValueFunction,
     decreaseValueFunction,
@@ -52,18 +53,16 @@ function MetricAlarmIndicator(props) {
         <div className="metric">
           {value}
         </div>
-        <div className="metric_sign_edit">
-          {sign}
-        </div>
+        <IndicatorSignSelector sign={sign} />
         <div className="metric_limig_value">
           {limitValue}
         </div>
         <div className="indicator_actions_buttons">
           <button className='indicator_action'>
-            <FontAwesomeIcon icon={faSave} onClick={saveEditCallback} /> 
+            <FontAwesomeIcon icon={faSave} onClick={saveEditCallback} />
           </button>
           <button className='indicator_action' onClick={declineEditCallback}>
-            <FontAwesomeIcon icon={faClose} /> 
+            <FontAwesomeIcon icon={faClose} />
           </button>
         </div>
       </div>
@@ -93,10 +92,10 @@ function MetricAlarmIndicator(props) {
 
         <div className="indicator_actions_buttons">
           <button className='indicator_action' onClick={switchEditModeCallback}>
-            <FontAwesomeIcon icon={faEdit} /> 
+            <FontAwesomeIcon icon={faEdit} />
           </button>
           <button className='indicator_action' onClick={deleteIndicatorCallback}>
-            <FontAwesomeIcon icon={faTrash} /> 
+            <FontAwesomeIcon icon={faTrash} />
           </button>
         </div>
       </div>

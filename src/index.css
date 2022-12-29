@@ -78,6 +78,24 @@ hr.form_separator {
   color: black;
 }
 
+.metric_sign_edit .alarm_indicator_sign_dropdown {
+  z-index: 20;
+  background-color: white;
+}
+
+.metric_sign_edit .alarm_indicator_sign_dropdown .indicator_sign {
+  /* display: block; */
+  opacity: 0;
+  height: 0 !important;
+}
+
+
+.metric_sign_edit .alarm_indicator_sign_dropdown.opened {
+  height: fit-content;
+  transition: 3s ease-out;
+  height: 100%;
+}
+
 .metric_alarm_indicator.edit_indicator .metric_limig_value {
   flex: 1;
   font-size: 4rem;
