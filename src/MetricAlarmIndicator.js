@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { getPredicateFunction } from './metricAlarmContext';
-import { useGlobalContext } from './context';
+// import { useGlobalContext } from './context';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -12,20 +12,12 @@ const alarmFunction = (state) => {
 };
 
 function MetricAlarmIndicator(props) {
-  const { incIndicatorValue, decIndicatorValue } = useGlobalContext();
-  const { indicatorState, edit = false } = props;
+  // const { incIndicatorValue, decIndicatorValue } = useGlobalContext();
+  const { indicatorState, edit = false, increaseValueFunction, decreaseValueFunction } = props;
   const { id, value, sign, limitValue, alarmMessage } = indicatorState;
 
   const [alarm, setAlarm] = useState(alarmFunction(indicatorState));
   const [editMode, setEditMode] = useState(edit);
-
-  const increaseButtonCallback = useCallback(() => {
-    incIndicatorValue(id);
-  }, [value])
-
-  const decreaseButtonCallback = useCallback(() => {
-    decIndicatorValue(id);
-  }, [value]);
 
   useEffect(
     () => {
@@ -46,7 +38,7 @@ function MetricAlarmIndicator(props) {
     return (
       <div className={alarm ? 'metric_alarm_indicator run_indicator_alarm' : 'metric_alarm_indicator indicator_ok'}>
         <div className="value_change_button_container">
-          <button type='button' className='value_change_button' onClick={decreaseButtonCallback}>
+          <button type='button' className='value_change_button' onClick={() => decreaseValueFunction(id)}>
             <FontAwesomeIcon icon={faMinus} />
           </button>
         </div>
@@ -54,7 +46,7 @@ function MetricAlarmIndicator(props) {
           {value}
         </div>
         <div className="value_change_button_container">
-          <button type='button' className='value_change_button' onClick={increaseButtonCallback} >
+          <button type='button' className='value_change_button' onClick={() => increaseValueFunction(id)} >
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>

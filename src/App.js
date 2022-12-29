@@ -4,6 +4,7 @@ import { useGlobalContext } from './context';
 
 function App() {
   const { globalState: { indicatorsList, editIndicator } } = useGlobalContext();
+  const { incIndicatorValue, decIndicatorValue } = useGlobalContext();
 
   return (
     <div className='twin_components'>
@@ -14,7 +15,14 @@ function App() {
       <div className='indicators_container'>
         {
           indicatorsList.map((indicatorState, index) => {
-            return (<MetricAlarmIndicator key={index} indicatorState={indicatorState} />)
+            return (
+              <MetricAlarmIndicator
+                key={index}
+                indicatorState={indicatorState}
+                increaseValueFunction={incIndicatorValue}
+                decreaseValueFunction={decIndicatorValue}
+              />
+            )
           })
         }
       </div>
