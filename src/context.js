@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useCallback } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeMetricAlarmIndicatorState, incValue, decValue } from './metricAlarmContext';
 import { addIndicator, makeTwinComponentsState, newIndicatorId } from './twinComponentsContext';
 
@@ -6,12 +6,20 @@ const AppContext = React.createContext();
 
 const LOCAL_STORAGE_NAME = 'indicatorsExercise';
 
-const makeDefaultState = () => {
-    const editIndicator = makeMetricAlarmIndicatorState({ id: 'editDummy' });
+const makeDefaultIndicator = () => {
+    return makeMetricAlarmIndicatorState({ id: null });
+}
 
+const makeDefaultEditIndicator = (currentState) => {
+    const editIndicator = makeDefaultIndicator();
+
+    return { ...currentState, editIndicator };
+}
+
+const makeDefaultState = () => {
     const twinComponents = makeTwinComponentsState();
 
-    return { ...twinComponents, editIndicator };
+    return makeDefaultEditIndicator(twinComponents);
 }
 
 const geStateFromLocalStorage = () => {
@@ -38,26 +46,44 @@ const AppProvider = ({ children }) => {
         setGlobalState(addIndicator(globalState, newIndicator));
     }
 
-    const updateIndicatorWithFunction = (id, updateFunction) => {
-        const { indicatorsList } = globalState;
-
-        const updatedIndicatorsList = indicatorsList.map((indicator) => {
+    const updateIndicatorById = (indicatorsList, id, updateFunction) => {
+        return indicatorsList.map((indicator) => {
             if (indicator.id === id) {
                 return updateFunction(indicator);
             } else {
                 return indicator;
             }
         });
+    }
 
-        setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
+    const updateIndicatorsList = (currentState, updatedIndicatorsList) => {
+        return { ...currentState, indicatorsList: updatedIndicatorsList }
     }
 
     const decIndicatorValue = (id) => {
-        updateIndicatorWithFunction(id, decValue);
+        const { indicatorsList } = globalState;
+
+        const updatedIndicatorsList = updateIndicatorById(indicatorsList, id, decValue);
+
+        setGlobalState(updateIndicatorsList(globalState, updatedIndicatorsList));
     }
 
     const incIndicatorValue = (id) => {
-        updateIndicatorWithFunction(id, incValue);
+        const { indicatorsList } = globalState;
+
+        const updatedIndicatorsList = updateIndicatorById(indicatorsList, id, incValue);
+
+        setGlobalState(updateIndicatorsList(globalState, updatedIndicatorsList));
+    }
+
+    const updateIndicator = (id, updateIndicatorState) => {
+        const { indicatorsList } = globalState;
+
+        const updatedIndicatorsList = updateIndicatorById(indicatorsList, id, (indicatorState) => {
+            return { ...indicatorState, ...updateIndicatorState, editing: false };
+        })
+
+        setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
     }
 
     const deleteIndicator = (deleteId) => {
@@ -65,14 +91,40 @@ const AppProvider = ({ children }) => {
         setGlobalState({ ...globalState, indicatorsList: updatedIndicatorsList });
     }
 
+    const setEditIndicator = (indicatorState) => {
+        const { id, value, sign, limitValue, alarmMessage, editing } = indicatorState;
+
+        const editIndicator = { id, value, sign, limitValue, alarmMessage, editing };
+
+        const { indicatorsList } = globalState;
+
+        const updatedIndicatorsList = updateIndicatorById(indicatorsList, id, (indicatorState) => {
+            return { ...indicatorState, editing: true };
+        })
+
+        setGlobalState(updateIndicatorsList({ ...globalState, editIndicator }, updatedIndicatorsList));
+    }
+
+    const resetEditIndicator = () => {
+        const { indicatorsList } = globalState;
+
+        const updatedIndicatorsList = indicatorsList.map((indicatorState) => {
+                return { ...indicatorState, editing: false };
+        });
+
+        setGlobalState(makeDefaultEditIndicator(updateIndicatorsList(globalState, updatedIndicatorsList)));
+    }
+
     return (
         <AppContext.Provider value={{
             globalState,
             addIndicatorWithParams,
-            updateIndicatorWithFunction,
             incIndicatorValue,
             decIndicatorValue,
-            deleteIndicator
+            deleteIndicator,
+            setEditIndicator,
+            resetEditIndicator,
+            updateIndicator
         }}>
             {children}
         </AppContext.Provider>

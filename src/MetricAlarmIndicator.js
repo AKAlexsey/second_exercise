@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { getPredicateFunction } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,29 +10,34 @@ const alarmFunction = (state) => {
   return predicate(value);
 };
 
+const defaultFunction = (value) => value;
+
 function MetricAlarmIndicator(props) {
-  const { 
+  const {
     indicatorState,
-    increaseValueFunction,
-    decreaseValueFunction,
-    deleteIndicatorFunction,
-    edit = false
+    increaseValueFunction = defaultFunction,
+    decreaseValueFunction = defaultFunction,
+    deleteIndicatorFunction = defaultFunction,
+    addIndicatorFunction = defaultFunction,
+    updateIndicatorFunction = defaultFunction,
+    resetIndicatorFunction = defaultFunction,
+    startEditingIndicatorFunction = defaultFunction,
+    editMode = false
   } = props;
-  const { id, value, sign, limitValue, alarmMessage } = indicatorState;
+  const { id, value, sign, limitValue, alarmMessage, editing } = indicatorState;
 
   const [alarm, setAlarm] = useState(alarmFunction(indicatorState));
-  const [editMode, setEditMode] = useState(edit);
 
-  const switchEditModeCallback = () => {
-    setEditMode(true);
+  const startEditCallback = () => {
+    startEditingIndicatorFunction(indicatorState)
   }
 
   const saveEditCallback = () => {
-    setEditMode(false);
+    // setEditMode(false);
   }
 
   const declineEditCallback = () => {
-    setEditMode(false);
+    resetIndicatorFunction()
   }
 
   const deleteIndicatorCallback = () => {
@@ -60,10 +65,10 @@ function MetricAlarmIndicator(props) {
         </div>
         <div className="indicator_actions_buttons">
           <button className='indicator_action'>
-            <FontAwesomeIcon icon={faSave} onClick={saveEditCallback} /> 
+            <FontAwesomeIcon icon={faSave} onClick={saveEditCallback} />
           </button>
           <button className='indicator_action' onClick={declineEditCallback}>
-            <FontAwesomeIcon icon={faClose} /> 
+            <FontAwesomeIcon icon={faClose} />
           </button>
         </div>
       </div>
@@ -92,12 +97,21 @@ function MetricAlarmIndicator(props) {
         }
 
         <div className="indicator_actions_buttons">
-          <button className='indicator_action' onClick={switchEditModeCallback}>
-            <FontAwesomeIcon icon={faEdit} /> 
-          </button>
-          <button className='indicator_action' onClick={deleteIndicatorCallback}>
-            <FontAwesomeIcon icon={faTrash} /> 
-          </button>
+          {editing &&
+            <button className='indicator_action' onClick={declineEditCallback}>
+              <FontAwesomeIcon icon={faClose} />
+            </button>
+          }
+          {!editing &&
+              <>
+                <button className='indicator_action' onClick={startEditCallback}>
+                  <FontAwesomeIcon icon={faEdit} />
+                </button>
+                <button className='indicator_action' onClick={deleteIndicatorCallback}>
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </>
+          }
         </div>
       </div>
     );

@@ -10,7 +10,7 @@ const makeMetricAlarmIndicatorState = (defaultParams = {}) => {
     const { id, value = DEFAULT_VALUE, sign = MORE_SIGN, limitValue = DEFAULT_VALUE } = defaultParams;
     const alarmMessage = defaultParams.alarmMessage ? defaultParams.alarmMessage : makeAlarmMessage(sign, limitValue);
 
-    return { id, value, sign, limitValue, alarmMessage };
+    return { id, value, sign, limitValue, alarmMessage, editing: false };
 }
 
 const updateMetricAlarmIndicatorState = (indicatorState, updateParams) => {

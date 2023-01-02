@@ -13,10 +13,10 @@ const makeTwinComponentsState = () => {
 
 const addIndicator = (state, newIndicatorParams) => {
     const { indicatorsList } = state;
-    const newIndicatorId = newIndicatorId(state);
-    const newIndicator = { ...newIndicatorParams, id: newIndicatorId }
+    const nextIndicatorId = newIndicatorId(state);
+    const newIndicator = { ...newIndicatorParams, id: nextIndicatorId }
 
-    return { ...state, currentMaxId: newIndicatorId, indicatorsList: indicatorsList.concat(newIndicator) };
+    return { ...state, currentMaxId: nextIndicatorId, indicatorsList: indicatorsList.concat(newIndicator) };
 }
 
 const delIndicator = (state, deleteId) => {
@@ -32,4 +32,4 @@ const newIndicatorId = (state) => {
 }
 
 
-export { addIndicator, makeTwinComponentsState, newIndicatorId }
+export { addIndicator, delIndicator, makeTwinComponentsState, newIndicatorId }

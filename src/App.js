@@ -7,13 +7,23 @@ function App() {
     globalState: { indicatorsList, editIndicator },
     incIndicatorValue,
     decIndicatorValue,
-    deleteIndicator
+    deleteIndicator,
+    setEditIndicator,
+    resetEditIndicator,
+    addIndicatorWithParams,
+    updateIndicator
   } = useGlobalContext();
 
   return (
     <div className='twin_components'>
       <div>
-        <MetricAlarmIndicator indicatorState={editIndicator} edit={true} deleteIndicatorFunction={deleteIndicator} />
+        <MetricAlarmIndicator 
+          indicatorState={editIndicator} 
+          editMode={true} 
+          resetIndicatorFunction={resetEditIndicator}
+          addIndicatorFunction={addIndicatorWithParams}
+          updateIndicatorFunction={updateIndicator}
+        />
       </div>
       <hr className='form_separator' />
       <div className='indicators_container'>
@@ -26,6 +36,7 @@ function App() {
                 increaseValueFunction={incIndicatorValue}
                 decreaseValueFunction={decIndicatorValue}
                 deleteIndicatorFunction={deleteIndicator}
+                startEditingIndicatorFunction={setEditIndicator}
               />
             )
           })
