@@ -1,4 +1,5 @@
 const DEFAULT_VALUE = 0;
+const DEFAULT_ID = null;
 const MORE_SIGN = '>';
 const LESS_SIGN = '<';
 const EQUAL_SIGN = '=';
@@ -7,7 +8,7 @@ const NOT_EQUAL_SIGN = '!=';
 export { MORE_SIGN, LESS_SIGN, EQUAL_SIGN, NOT_EQUAL_SIGN }
 
 const makeMetricAlarmIndicatorState = (defaultParams = {}) => {
-    const { id, value = DEFAULT_VALUE, sign = MORE_SIGN, limitValue = DEFAULT_VALUE } = defaultParams;
+    const { id = DEFAULT_ID, value = DEFAULT_VALUE, sign = MORE_SIGN, limitValue = DEFAULT_VALUE } = defaultParams;
     const alarmMessage = defaultParams.alarmMessage ? defaultParams.alarmMessage : makeAlarmMessage(sign, limitValue);
 
     return { id, value, sign, limitValue, alarmMessage, editing: false };
@@ -16,7 +17,7 @@ const makeMetricAlarmIndicatorState = (defaultParams = {}) => {
 const updateMetricAlarmIndicatorState = (indicatorState, updateParams) => {
     const { id, value, sign, limitValue, alarmMessage } = updateParams;
 
-    return { 
+    return {
         ...indicatorState,
         ...id && { id },
         ...value && { value },
@@ -68,7 +69,7 @@ const getPredicateFunction = (sign, limitValue) => {
     }
 }
 
-export { 
+export {
     makeMetricAlarmIndicatorState,
     getPredicateFunction,
     updateMetricAlarmIndicatorState,

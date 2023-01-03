@@ -7,7 +7,7 @@ const AppContext = React.createContext();
 const LOCAL_STORAGE_NAME = 'indicatorsExercise';
 
 const makeDefaultIndicator = () => {
-    return makeMetricAlarmIndicatorState({ id: null });
+    return makeMetricAlarmIndicatorState();
 }
 
 const makeDefaultEditIndicator = (currentState) => {
@@ -109,7 +109,7 @@ const AppProvider = ({ children }) => {
         const { indicatorsList } = globalState;
 
         const updatedIndicatorsList = indicatorsList.map((indicatorState) => {
-                return { ...indicatorState, editing: false };
+            return { ...indicatorState, editing: false };
         });
 
         setGlobalState(makeDefaultEditIndicator(updateIndicatorsList(globalState, updatedIndicatorsList)));

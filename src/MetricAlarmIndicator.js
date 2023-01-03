@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getPredicateFunction } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faGreaterThan, faLessThan, faEquals, faNotEqual, faClose, faEdit, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faGreaterThan, faLessThan, faEquals, faNotEqual, faCirclePlus, faClose, faEdit, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
+import IndicatorActionButton from './IndicatorActionButton';
+
+import { useGlobalContext } from './context';
 
 const alarmFunction = (state) => {
   const { value, sign, limitValue } = state;
@@ -13,6 +16,8 @@ const alarmFunction = (state) => {
 const defaultFunction = (value) => value;
 
 function MetricAlarmIndicator(props) {
+  const { resetEditIndicator } = useGlobalContext();
+
   const {
     indicatorState,
     increaseValueFunction = defaultFunction,
@@ -20,7 +25,6 @@ function MetricAlarmIndicator(props) {
     deleteIndicatorFunction = defaultFunction,
     addIndicatorFunction = defaultFunction,
     updateIndicatorFunction = defaultFunction,
-    resetIndicatorFunction = defaultFunction,
     startEditingIndicatorFunction = defaultFunction,
     editMode = false
   } = props;
@@ -33,11 +37,11 @@ function MetricAlarmIndicator(props) {
   }
 
   const saveEditCallback = () => {
-    // setEditMode(false);
+    updateIndicatorFunction()
   }
 
   const declineEditCallback = () => {
-    resetIndicatorFunction()
+    resetEditIndicator()
   }
 
   const deleteIndicatorCallback = () => {
@@ -50,6 +54,16 @@ function MetricAlarmIndicator(props) {
     },
     [value, sign, limitValue]
   )
+
+  const getIndicatorClasses = (alarm, editing) => {
+    if (editing) {
+      return 'metric_alarm_indicator indicator_editing';
+    } else if (alarm) {
+      return 'metric_alarm_indicator run_indicator_alarm';
+    } else {
+      return 'metric_alarm_indicator indicator_ok';
+    }
+  }
 
   if (editMode) {
     return (
@@ -64,20 +78,24 @@ function MetricAlarmIndicator(props) {
           {limitValue}
         </div>
         <div className="indicator_actions_buttons">
-          <button className='indicator_action'>
-            <FontAwesomeIcon icon={faSave} onClick={saveEditCallback} />
-          </button>
-          <button className='indicator_action' onClick={declineEditCallback}>
-            <FontAwesomeIcon icon={faClose} />
-          </button>
+          {
+            id && <>
+              <IndicatorActionButton icon={faSave} clickCallback={saveEditCallback} tooltipText={'Save changes'} />
+              <IndicatorActionButton icon={faClose} clickCallback={declineEditCallback} tooltipText={'Decline changes'} />
+            </>
+          }
+          {
+            (id === null) &&
+            <IndicatorActionButton icon={faCirclePlus} clickCallback={saveEditCallback} tooltipText={'Add new'} />
+          }
         </div>
       </div>
     );
   } else {
     return (
-      <div className={alarm ? 'metric_alarm_indicator run_indicator_alarm' : 'metric_alarm_indicator indicator_ok'}>
+      <div className={getIndicatorClasses(alarm, editing)}>
         <div className="value_change_button_container">
-          <button type='button' className='value_change_button' onClick={() => decreaseValueFunction(id)}>
+          <button type='button' className='value_change_button' onClick={() => decreaseValueFunction(id)} disabled={editing}>
             <FontAwesomeIcon icon={faMinus} />
           </button>
         </div>
@@ -85,12 +103,12 @@ function MetricAlarmIndicator(props) {
           {value}
         </div>
         <div className="value_change_button_container">
-          <button type='button' className='value_change_button' onClick={() => increaseValueFunction(id)} >
+          <button type='button' className='value_change_button' onClick={() => increaseValueFunction(id)} disabled={editing}>
             <FontAwesomeIcon icon={faPlus} />
           </button>
         </div>
         {
-          alarm &&
+          (alarm && !editing) &&
           <div className="alarm_message">
             {alarmMessage}
           </div>
@@ -98,19 +116,13 @@ function MetricAlarmIndicator(props) {
 
         <div className="indicator_actions_buttons">
           {editing &&
-            <button className='indicator_action' onClick={declineEditCallback}>
-              <FontAwesomeIcon icon={faClose} />
-            </button>
+            <IndicatorActionButton icon={faClose} clickCallback={declineEditCallback} tooltipText={'Decline edit'} />
           }
           {!editing &&
-              <>
-                <button className='indicator_action' onClick={startEditCallback}>
-                  <FontAwesomeIcon icon={faEdit} />
-                </button>
-                <button className='indicator_action' onClick={deleteIndicatorCallback}>
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </>
+            <>
+              <IndicatorActionButton icon={faEdit} clickCallback={startEditCallback} tooltipText={'Edit'} />
+              <IndicatorActionButton icon={faTrash} clickCallback={deleteIndicatorCallback} tooltipText={'Delete'} />
+            </>
           }
         </div>
       </div>

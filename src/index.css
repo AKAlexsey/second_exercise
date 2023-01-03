@@ -47,7 +47,6 @@ hr.form_separator {
   display: flex;
   width: var(--indicator-width);
   height: var(--indicator-height);
-  background-color: lightgreen;
   text-align: center;
   border: 1px black solid;
   border-radius: var(--indicator-border-radius);
@@ -55,17 +54,65 @@ hr.form_separator {
   transition: background-color var(--indicator-background-color-transition);
 }
 
-.metric_alarm_indicator.run_indicator_alarm {
-  background-color: lightpink;
-  transition: background-color var(--indicator-background-color-transition);
+.metric_alarm_indicator.indicator_ok {
+  background-color: lightgreen;
 }
 
-.metric_alarm_indicator.edit_indicator {
-  background-color: white;
+.metric_alarm_indicator.run_indicator_alarm {
+  background-color: lightpink;
+}
+
+.metric_alarm_indicator.indicator_editing {
+  background-color: lightgrey;
 }
 
 .metric_alarm_indicator.edit_indicator .metric {
+  background-color: white;
+}
+
+.metric_alarm_indicator.edit_indicator .metric,
+.metric_alarm_indicator.indicator_editing .metric {
   color: var(--inactive-color);
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+  /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: auto;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 5px;
+  border-radius: 6px;
+
+  top: 100%;
+  left: 30%;
+
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.tooltip .tooltiptext::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  left: 50%;
+  bottom: 100%;
+  transform: translate(-50%, 50%) rotate(45deg);
+  background-color: black;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 .metric_alarm_indicator.edit_indicator .metric_sign_edit {
