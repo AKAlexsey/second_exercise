@@ -1,13 +1,10 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { makeMetricAlarmIndicatorState, incValue, decValue } from './metricAlarmContext';
+import { makeMetricAlarmIndicatorState, incValue, decValue, validateValue } from './metricAlarmContext';
 import { addIndicator, makeTwinComponentsState, newIndicatorId } from './twinComponentsContext';
 
 const AppContext = React.createContext();
 
 const LOCAL_STORAGE_NAME = 'indicatorsExercise';
-
-const MINIMUM_LIMIT_VALUE = 0;
-const MAXIMUM_LIMIT_VALUE = 99;
 
 const makeDefaultIndicator = () => {
     return makeMetricAlarmIndicatorState();
@@ -25,11 +22,11 @@ const makeDefaultEditIndicator = (currentState) => {
 }
 
 const setEditLimitValue = (editIndicator, limitValue) => {
-    return { ...editIndicator, editLimitValue: limitValue}
+    return { ...editIndicator, editLimitValue: limitValue }
 }
 
 const setEditSign = (editIndicator, sign) => {
-    return { ...editIndicator, editSign: sign}
+    return { ...editIndicator, editSign: sign }
 }
 
 const makeDefaultState = () => {
@@ -149,31 +146,18 @@ const AppProvider = ({ children }) => {
         setGlobalState({ ...globalState, editIndicator: { ...editIndicator, ...updateParams } });
     }
 
-    const updateEditIndicatorLimitValue = (limitValue) => {
-        const { editIndicator } = globalState;
+    // TODO not sure if it's necessary
+    // const updateEditIndicatorLimitValue = (limitValue) => {
+    //     const { editIndicator } = globalState;
 
-        setGlobalState({ ...globalState, editIndicator: setEditLimitValue(editIndicator, limitValue) });
-    }
+    //     setGlobalState({ ...globalState, editIndicator: setEditLimitValue(editIndicator, limitValue) });
+    // }
 
-    const updateEditIndicatorSign = (sign) => {
-        const { editIndicator } = globalState;
+    // const updateEditIndicatorSign = (sign) => {
+    //     const { editIndicator } = globalState;
 
-        setGlobalState({ ...globalState, editIndicator: setEditSign(editIndicator, sign) });
-    }
-    
-    const validateValue = (value) => {
-      const newEditValue = parseInt(value);
-    
-      if (newEditValue > MAXIMUM_LIMIT_VALUE) {
-        return MAXIMUM_LIMIT_VALUE;
-      } else if (newEditValue < MINIMUM_LIMIT_VALUE) {
-        return MINIMUM_LIMIT_VALUE;
-      } else if(Number.isInteger(newEditValue)) {
-        return newEditValue;
-      } else {
-        return MINIMUM_LIMIT_VALUE;
-      }
-    }
+    //     setGlobalState({ ...globalState, editIndicator: setEditSign(editIndicator, sign) });
+    // }
 
     return (
         <AppContext.Provider value={{
@@ -187,9 +171,7 @@ const AppProvider = ({ children }) => {
             updateIndicator,
             // updateEditIndicatorLimitValue,
             // updateEditIndicatorSign, 
-            validateValue,
-            MINIMUM_LIMIT_VALUE,
-            MAXIMUM_LIMIT_VALUE
+            validateValue
         }}>
             {children}
         </AppContext.Provider>

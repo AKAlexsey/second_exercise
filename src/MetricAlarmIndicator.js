@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPredicateFunction } from './metricAlarmContext';
+import { getPredicateFunction, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faGreaterThan, faLessThan, faEquals, faNotEqual, faCirclePlus, faClose, faEdit, faTrash, faSave, faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +16,7 @@ const alarmFunction = (state) => {
 const defaultFunction = (value) => value;
 
 function MetricAlarmIndicator(props) {
-  const { resetEditIndicator, validateValue, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE } = useGlobalContext();
+  const { resetEditIndicator, validateValue } = useGlobalContext();
 
   const {
     indicatorState,
@@ -50,7 +50,8 @@ function MetricAlarmIndicator(props) {
 
   if (editMode) {
     const updateEditLimitValueCallback = (e) => {
-      e.target.value = validateValue(e.target.value);
+      // e.target.value = validateValue(e.target.value);
+      console.log(`Update ${e.target.value}`);
     }
 
     return (
@@ -71,6 +72,7 @@ function MetricAlarmIndicator(props) {
             min={MINIMUM_LIMIT_VALUE}
             max={MAXIMUM_LIMIT_VALUE}
             onInput={updateEditLimitValueCallback}
+            onChange={updateEditLimitValueCallback}
           />
           <div className="limit_borders">
             <div>{MINIMUM_LIMIT_VALUE}</div>
