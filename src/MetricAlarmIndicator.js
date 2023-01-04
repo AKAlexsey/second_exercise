@@ -15,11 +15,8 @@ const alarmFunction = (state) => {
 
 const defaultFunction = (value) => value;
 
-const MINIMUM_VALUE = 0;
-const MAXIMUM_VALUE = 99;
-
 function MetricAlarmIndicator(props) {
-  const { resetEditIndicator } = useGlobalContext();
+  const { resetEditIndicator, validateValue, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE } = useGlobalContext();
 
   const {
     indicatorState,
@@ -31,20 +28,20 @@ function MetricAlarmIndicator(props) {
     startEditingIndicatorFunction = defaultFunction,
     editMode = false
   } = props;
-  const { id, value, sign, limitValue, alarmMessage, editing } = indicatorState;
+  const { id, value, sign, limitValue, alarmMessage, editing, editLimitValue, editSign } = indicatorState;
 
   const [alarm, setAlarm] = useState(alarmFunction(indicatorState));
 
   const startEditCallback = () => {
-    startEditingIndicatorFunction(indicatorState)
+    startEditingIndicatorFunction(indicatorState);
   }
 
   const saveEditCallback = () => {
-    updateIndicatorFunction()
+    updateIndicatorFunction();
   }
 
   const declineEditCallback = () => {
-    resetEditIndicator()
+    resetEditIndicator();
   }
 
   const deleteIndicatorCallback = () => {
@@ -52,23 +49,8 @@ function MetricAlarmIndicator(props) {
   }
 
   if (editMode) {
-    const [editValue, setEditValue] = useState(value);
-    const [editSign, setEditSign] = useState(sign);
-
-    const updateEditValueCallback = (e) => {
-      const newValue = parseInt(e.target.value);
-
-      if (newValue > MAXIMUM_VALUE) {
-        e.target.value = MAXIMUM_VALUE;
-        e.preventDefault();
-        e.stopPropagation();
-      } else if (newValue < MINIMUM_VALUE) {
-        e.target.value = MINIMUM_VALUE;
-        e.preventDefault();
-        e.stopPropagation();
-      } else {
-        setEditValue(newValue)
-      }
+    const updateEditLimitValueCallback = (e) => {
+      e.target.value = validateValue(e.target.value);
     }
 
     return (
@@ -83,20 +65,19 @@ function MetricAlarmIndicator(props) {
           <input
             type="number"
             className="indicator_edit_value_input"
-            ref={(value) => setEditValue(value)}
+            value={editLimitValue}
+            ref={ (value) => value }
             name="value"
-            min={MINIMUM_VALUE}
-            max={MAXIMUM_VALUE}
-            onChange={updateEditValueCallback}
-            onInput={updateEditValueCallback}
-            maxlength='2'
+            min={MINIMUM_LIMIT_VALUE}
+            max={MAXIMUM_LIMIT_VALUE}
+            onInput={updateEditLimitValueCallback}
           />
           <div className="limit_borders">
-            <div>{MINIMUM_VALUE}</div>
+            <div>{MINIMUM_LIMIT_VALUE}</div>
             <div className='borders_sign'><FontAwesomeIcon icon={faLessThanEqual} /> </div>
             <div>V</div>
             <div className='borders_sign'><FontAwesomeIcon icon={faLessThanEqual} /> </div>
-            <div>{MAXIMUM_VALUE}</div>
+            <div>{MAXIMUM_LIMIT_VALUE}</div>
           </div>
         </div>
         <div className="indicator_actions_buttons">

@@ -6,14 +6,30 @@ const AppContext = React.createContext();
 
 const LOCAL_STORAGE_NAME = 'indicatorsExercise';
 
+const MINIMUM_LIMIT_VALUE = 0;
+const MAXIMUM_LIMIT_VALUE = 99;
+
 const makeDefaultIndicator = () => {
     return makeMetricAlarmIndicatorState();
 }
 
 const makeDefaultEditIndicator = (currentState) => {
-    const editIndicator = makeDefaultIndicator();
+    const defaultIndicator = makeDefaultIndicator();
+
+    const { sign, limitValue } = defaultIndicator;
+
+    let editIndicator = setEditLimitValue(defaultIndicator, limitValue);
+    editIndicator = setEditSign(editIndicator, sign);
 
     return { ...currentState, editIndicator };
+}
+
+const setEditLimitValue = (editIndicator, limitValue) => {
+    return { ...editIndicator, editLimitValue: limitValue}
+}
+
+const setEditSign = (editIndicator, sign) => {
+    return { ...editIndicator, editSign: sign}
 }
 
 const makeDefaultState = () => {
@@ -46,14 +62,18 @@ const AppProvider = ({ children }) => {
         setGlobalState(addIndicator(globalState, newIndicator));
     }
 
+    const iterateIndicatorsList = (indicatorsList, iterateElementFunction) => {
+        return indicatorsList.map(iterateElementFunction);
+    }
+
     const updateIndicatorById = (indicatorsList, id, updateFunction) => {
-        return indicatorsList.map((indicator) => {
+        return iterateIndicatorsList(indicatorsList, (indicator) => {
             if (indicator.id === id) {
                 return updateFunction(indicator);
             } else {
                 return indicator;
             }
-        });
+        })
     }
 
     const updateIndicatorsList = (currentState, updatedIndicatorsList) => {
@@ -94,15 +114,23 @@ const AppProvider = ({ children }) => {
     const setEditIndicator = (indicatorState) => {
         const { id, value, sign, limitValue, alarmMessage, editing } = indicatorState;
 
-        const editIndicator = { id, value, sign, limitValue, alarmMessage, editing };
+        const newEditIndicator = { id, value, sign, limitValue, alarmMessage, editing, editLimitValue: limitValue, editSign: sign };
 
-        const { indicatorsList } = globalState;
+        const { indicatorsList, editIndicator } = globalState;
 
-        const updatedIndicatorsList = updateIndicatorById(indicatorsList, id, (indicatorState) => {
+        let intermediateIndicatorsList = indicatorsList;
+
+        if (editIndicator.id) {
+            intermediateIndicatorsList = updateIndicatorById(intermediateIndicatorsList, editIndicator.id, (indicatorState) => {
+                return { ...indicatorState, editing: false };
+            })
+        }
+
+        const updatedIndicatorsList = updateIndicatorById(intermediateIndicatorsList, id, (indicatorState) => {
             return { ...indicatorState, editing: true };
         })
 
-        setGlobalState(updateIndicatorsList({ ...globalState, editIndicator }, updatedIndicatorsList));
+        setGlobalState(updateIndicatorsList({ ...globalState, editIndicator: newEditIndicator }, updatedIndicatorsList));
     }
 
     const resetEditIndicator = () => {
@@ -115,6 +143,38 @@ const AppProvider = ({ children }) => {
         setGlobalState(makeDefaultEditIndicator(updateIndicatorsList(globalState, updatedIndicatorsList)));
     }
 
+    const updateEditIndicator = (updateParams) => {
+        const { editIndicator } = globalState;
+
+        setGlobalState({ ...globalState, editIndicator: { ...editIndicator, ...updateParams } });
+    }
+
+    const updateEditIndicatorLimitValue = (limitValue) => {
+        const { editIndicator } = globalState;
+
+        setGlobalState({ ...globalState, editIndicator: setEditLimitValue(editIndicator, limitValue) });
+    }
+
+    const updateEditIndicatorSign = (sign) => {
+        const { editIndicator } = globalState;
+
+        setGlobalState({ ...globalState, editIndicator: setEditSign(editIndicator, sign) });
+    }
+    
+    const validateValue = (value) => {
+      const newEditValue = parseInt(value);
+    
+      if (newEditValue > MAXIMUM_LIMIT_VALUE) {
+        return MAXIMUM_LIMIT_VALUE;
+      } else if (newEditValue < MINIMUM_LIMIT_VALUE) {
+        return MINIMUM_LIMIT_VALUE;
+      } else if(Number.isInteger(newEditValue)) {
+        return newEditValue;
+      } else {
+        return MINIMUM_LIMIT_VALUE;
+      }
+    }
+
     return (
         <AppContext.Provider value={{
             globalState,
@@ -124,7 +184,12 @@ const AppProvider = ({ children }) => {
             deleteIndicator,
             setEditIndicator,
             resetEditIndicator,
-            updateIndicator
+            updateIndicator,
+            // updateEditIndicatorLimitValue,
+            // updateEditIndicatorSign, 
+            validateValue,
+            MINIMUM_LIMIT_VALUE,
+            MAXIMUM_LIMIT_VALUE
         }}>
             {children}
         </AppContext.Provider>
