@@ -17,6 +17,7 @@ body {
   --change-value-button-size: 32px;
   --indicator-background-color-transition: 1s;
   --inactive-color: grey;
+  --limit-borders-font-size: 10px;
 }
 
 .twin_components {
@@ -75,6 +76,10 @@ hr.form_separator {
   color: var(--inactive-color);
 }
 
+.indicator_edit_value_input {
+  font-size: 2rem;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;
@@ -93,7 +98,7 @@ hr.form_separator {
   border-radius: 6px;
 
   top: 100%;
-  left: 30%;
+  left: 0;
 
   position: absolute;
   z-index: 1;
@@ -125,7 +130,7 @@ hr.form_separator {
   color: black;
 }
 
-.metric_alarm_indicator.edit_indicator .metric_limig_value {
+.metric_alarm_indicator.edit_indicator .metric_limit_value {
   flex: 1;
   font-size: 4rem;
   line-height: 4rem;
@@ -135,10 +140,40 @@ hr.form_separator {
   color: black;
 }
 
+.metric_alarm_indicator.edit_indicator .metric_limit_value.edit_mode {
+  display: flex;
+  align-items: center;
+}
+
+.metric_alarm_indicator.edit_indicator .metric_limit_value.edit_mode input {
+  width: 100%;
+  margin-right: 9px;
+  font-size: 1.75rem;
+}
+
+.metric_alarm_indicator.edit_indicator .metric_limit_value.edit_mode .limit_borders {
+  bottom: 12px;
+  color: var(--inactive-color);
+  display: flex;
+  align-items: center;
+  font-size: var(--limit-borders-font-size);
+  position: absolute;
+}
+
+.metric_alarm_indicator.edit_indicator .metric_limit_value.edit_mode .limit_borders .borders_sign {
+  padding: 0px 3px;
+}
+
+
+.metric_alarm_indicator.edit_indicator .metric_limit_value.edit_mode .limit_borders div {
+  line-height: var(--limit-borders-font-size);
+  flex: 1;
+}
+
 .indicator_actions_buttons {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 2px;
+  right: 2px;
   font-size: 16px;
   padding-top: 2px;
   padding-right: 2px;
