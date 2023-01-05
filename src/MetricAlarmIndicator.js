@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getPredicateFunction, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE } from './metricAlarmContext';
+import { getPredicateFunction, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE, DEFAULT_VALUE } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faGreaterThan, faLessThan, faEquals, faNotEqual, faCirclePlus, faClose, faEdit, faTrash, faSave, faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
@@ -16,7 +16,7 @@ const alarmFunction = (state) => {
 const defaultFunction = (value) => value;
 
 function MetricAlarmIndicator(props) {
-  const { resetEditIndicator, validateValue } = useGlobalContext();
+  const { resetEditIndicator, validateValue, updateEditIndicatorLimitValue, updateEditIndicatorSign } = useGlobalContext();
 
   const {
     indicatorState,
@@ -28,16 +28,24 @@ function MetricAlarmIndicator(props) {
     startEditingIndicatorFunction = defaultFunction,
     editMode = false
   } = props;
-  const { id, value, sign, limitValue, alarmMessage, editing, editLimitValue, editSign } = indicatorState;
+  const { id, value, sign, limitValue, alarmMessage, editing } = indicatorState;
 
   const [alarm, setAlarm] = useState(alarmFunction(indicatorState));
+  const [editLimitValue, setEditLimitValue] = useState(limitValue);
+  const [editSign, setEditSign] = useState(sign);
 
   const startEditCallback = () => {
     startEditingIndicatorFunction(indicatorState);
   }
 
   const saveEditCallback = () => {
+    setEditLimitValue(DEFAULT_VALUE);
     updateIndicatorFunction();
+  }
+
+  const addCallback = () => {
+    setEditLimitValue(DEFAULT_VALUE);
+    addIndicatorFunction();
   }
 
   const declineEditCallback = () => {
@@ -48,12 +56,19 @@ function MetricAlarmIndicator(props) {
     deleteIndicatorFunction(id);
   }
 
-  if (editMode) {
-    const updateEditLimitValueCallback = (e) => {
-      // e.target.value = validateValue(e.target.value);
-      console.log(`Update ${e.target.value}`);
-    }
+  const updateEditLimitValueCallback = (e) => {
+    setEditLimitValue(validateValue(e.target.value));
+  }
 
+  useEffect(() => {
+    updateEditIndicatorLimitValue(editLimitValue);
+  }, [editLimitValue])
+
+  useEffect(() => {
+    setEditLimitValue(limitValue);
+  }, [id])
+
+  if (editMode) {
     return (
       <div className='metric_alarm_indicator edit_indicator'>
         <div className="metric">
@@ -67,11 +82,9 @@ function MetricAlarmIndicator(props) {
             type="number"
             className="indicator_edit_value_input"
             value={editLimitValue}
-            ref={ (value) => value }
             name="value"
             min={MINIMUM_LIMIT_VALUE}
             max={MAXIMUM_LIMIT_VALUE}
-            onInput={updateEditLimitValueCallback}
             onChange={updateEditLimitValueCallback}
           />
           <div className="limit_borders">
@@ -91,7 +104,7 @@ function MetricAlarmIndicator(props) {
           }
           {
             (id === null) &&
-            <IndicatorActionButton icon={faCirclePlus} clickCallback={saveEditCallback} tooltipText={'Add new'} />
+            <IndicatorActionButton icon={faCirclePlus} clickCallback={addCallback} tooltipText={'Add new'} />
           }
         </div>
       </div>

@@ -9,7 +9,7 @@ function App() {
     decIndicatorValue,
     deleteIndicator,
     setEditIndicator,
-    addIndicatorWithParams,
+    addNewIndicator,
     updateIndicator
   } = useGlobalContext();
 
@@ -19,7 +19,7 @@ function App() {
         <MetricAlarmIndicator
           indicatorState={editIndicator}
           editMode={true}
-          addIndicatorFunction={addIndicatorWithParams}
+          addIndicatorFunction={addNewIndicator}
           updateIndicatorFunction={updateIndicator}
         />
       </div>

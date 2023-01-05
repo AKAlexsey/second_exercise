@@ -4,11 +4,12 @@ const MORE_SIGN = '>';
 const LESS_SIGN = '<';
 const EQUAL_SIGN = '=';
 const NOT_EQUAL_SIGN = '!=';
+const DEFAULT_SIGN = MORE_SIGN;
 
 const MINIMUM_LIMIT_VALUE = 0;
 const MAXIMUM_LIMIT_VALUE = 99;
 
-export { MORE_SIGN, LESS_SIGN, EQUAL_SIGN, NOT_EQUAL_SIGN, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE }
+export { MORE_SIGN, LESS_SIGN, EQUAL_SIGN, NOT_EQUAL_SIGN, DEFAULT_SIGN, DEFAULT_VALUE, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE }
 
 const validateValue = (value) => {
     const newEditValue = parseInt(value);
@@ -26,9 +27,17 @@ const validateValue = (value) => {
 
 const makeMetricAlarmIndicatorState = (defaultParams = {}) => {
     const { id = DEFAULT_ID, value = DEFAULT_VALUE, sign = MORE_SIGN, limitValue = DEFAULT_VALUE } = defaultParams;
-    const alarmMessage = defaultParams.alarmMessage ? defaultParams.alarmMessage : makeAlarmMessage(sign, limitValue);
+    const indicatorParams = { id, value, sign, limitValue, editing: false };
+    const alarmMessage = makeAlarmMessage(indicatorParams);
 
-    return { id, value, sign, limitValue, alarmMessage, editing: false };
+    return { ...indicatorParams, alarmMessage };
+}
+
+
+const updateEndicatorParams = (indicatorState, editIndicator) => {
+    const alarmMessage = makeAlarmMessage(editIndicator);
+
+    return { ...indicatorState, ...editIndicator, editing: false, alarmMessage };
 }
 
 const updateMetricAlarmIndicatorState = (indicatorState, updateParams) => {
@@ -47,7 +56,7 @@ const updateMetricAlarmIndicatorState = (indicatorState, updateParams) => {
 const incValue = (indicatorState) => {
     const { value } = indicatorState;
 
-    
+
 
     return { ...indicatorState, value: validateValue(value + 1) };
 }
@@ -58,7 +67,9 @@ const decValue = (indicatorState) => {
     return { ...indicatorState, value: validateValue(value - 1) };
 }
 
-const makeAlarmMessage = (sign, limitValue) => {
+const makeAlarmMessage = (indicatorParams) => {
+    const { sign, limitValue } = indicatorParams;
+
     switch (sign) {
         case MORE_SIGN:
             return `Value is more than ${limitValue}`;
@@ -95,5 +106,6 @@ export {
     makeAlarmMessage,
     incValue,
     decValue,
-    validateValue
+    validateValue,
+    updateEndicatorParams
 }
