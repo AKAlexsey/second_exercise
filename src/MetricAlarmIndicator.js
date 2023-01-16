@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getPredicateFunction, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE, DEFAULT_VALUE } from './metricAlarmContext';
+import { getPredicateFunction, MINIMUM_LIMIT_VALUE, MAXIMUM_LIMIT_VALUE, DEFAULT_VALUE, PERMITTED_SIGN_VALUES } from './metricAlarmContext';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus, faMinus, faGreaterThan, faLessThan, faEquals, faNotEqual, faCirclePlus, faClose, faEdit, faTrash, faSave, faLessThanEqual } from '@fortawesome/free-solid-svg-icons';
 import IndicatorActionButton from './IndicatorActionButton';
+import DropDownButton from './DropDownButton';
 
 import { useGlobalContext } from './context';
 
@@ -65,6 +66,10 @@ function MetricAlarmIndicator(props) {
   }, [editLimitValue])
 
   useEffect(() => {
+    setEditSign(sign);
+  }, [sign])
+
+  useEffect(() => {
     setEditLimitValue(limitValue);
   }, [id])
 
@@ -72,11 +77,9 @@ function MetricAlarmIndicator(props) {
     return (
       <div className='metric_alarm_indicator edit_indicator'>
         <div className="metric">
-          {value}
+          { value }
         </div>
-        <div className="metric_sign_edit">
-          {sign}
-        </div>
+        <DropDownButton value={editSign} selectedCallback={(v) => console.log(`Value selected ${v}`)} permittedValuesList={PERMITTED_SIGN_VALUES} />
         <div className="metric_limit_value edit_mode">
           <input
             type="number"

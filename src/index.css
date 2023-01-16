@@ -9,6 +9,7 @@ body {
 
 :root {
   --alarm-height: 19px;
+  --sign-edit-padding: 6px;
   --indicator-width: 200px;
   --indicator-height: 100px;
   --main-container-padding: 7px;
@@ -120,14 +121,33 @@ hr.form_separator {
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
-.metric_alarm_indicator.edit_indicator .metric_sign_edit {
+.drop_down_button {
   flex: 1;
+  padding: 15px 6px;
+  color: black;
+  height: 70%;
+}
+
+.drop_down_button .value_wrapper {
   font-size: 4rem;
   line-height: 4rem;
   font-weight: bold;
-  padding-bottom: var(--alarm-height);
-  padding-top: var(--alarm-height);
-  color: black;
+  border: 2px solid darkgray;
+  border-radius: 3px;
+  height: 100%;
+}
+
+.drop_down_button .drop_down_container {
+  position: relative;
+  flex-direction: column;
+}
+
+.drop_down_button .drop_down_container {
+  position: absolute;
+}
+
+.drop_down_button .drop_down_container .drop_down_element.selected {
+  background-color: lightgray;
 }
 
 .metric_alarm_indicator.edit_indicator .metric_limit_value {

@@ -114,7 +114,7 @@ const AppProvider = ({ children }) => {
     const setEditIndicator = (indicatorState) => {
         const { id, value, sign, limitValue, alarmMessage, editing } = indicatorState;
 
-        const newEditIndicator = { id, value, sign, limitValue, alarmMessage, editing, editLimitValue: limitValue, editSign: sign };
+        const newEditIndicator = { id, value, sign, limitValue, alarmMessage, editing };
 
         const { indicatorsList, editIndicator } = globalState;
 
